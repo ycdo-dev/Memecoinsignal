@@ -5,452 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solana Pay to Access</title>
     <style>
+        /* Styles (same as your provided one, you can keep your existing styles) */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: #0d0d0d;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            padding: 40px 30px;
-            border-radius: 16px;
-            background: #1a1a1a;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
-            background: linear-gradient(90deg, #9945FF, #14F195);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
-
-        p {
-            margin-bottom: 24px;
-            font-size: 1.1rem;
-            color: #bbb;
-            line-height: 1.5;
-        }
-
-        button {
-            padding: 14px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            background: linear-gradient(90deg, #9945FF, #14F195);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 12px 0;
-            min-width: 200px;
-            box-shadow: 0 4px 12px rgba(153, 69, 255, 0.2);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(153, 69, 255, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .wallet-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 24px auto;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            max-width: 420px;
-        }
-        
-        .wallet-address {
-            font-family: monospace;
-            font-size: 0.9rem;
-            color: #14F195;
-            word-break: break-all;
-            margin: 0 8px;
-        }
-
-        .status {
-            min-height: 24px;
-            margin: 20px 0;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 8px;
-            max-width: 420px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .status.success {
-            background-color: rgba(20, 241, 149, 0.1);
-            color: #14F195;
-        }
-
-        .status.error {
-            background-color: rgba(255, 82, 82, 0.1);
-            color: #FF5252;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .buy-now {
-            background: linear-gradient(90deg, #14F195, #00C2FF);
-            box-shadow: 0 4px 12px rgba(20, 241, 149, 0.2);
-        }
-        
-        .buy-now:hover {
-            box-shadow: 0 6px 16px rgba(20, 241, 149, 0.3);
-        }
-        
-        .try-again {
-            background: linear-gradient(90deg, #9945FF, #7B61FF);
-        }
-        
-        .payment-info {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin: 24px auto;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            max-width: 420px;
-        }
-        
-        .sol-logo {
-            width: 24px;
-            height: 24px;
-        }
-        
-        .amount {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #fff;
-        }
-        
-        .error-icon {
-            color: #FF5252;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: #0d0d0d; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { max-width: 500px; width: 100%; text-align: center; padding: 40px 30px; border-radius: 16px; background: #1a1a1a; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+        h1 { font-size: 2.5rem; margin-bottom: 16px; background: linear-gradient(90deg, #9945FF, #14F195); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
+        p { margin-bottom: 24px; font-size: 1.1rem; color: #bbb; }
+        button { padding: 14px 28px; font-size: 1rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; margin: 12px 0; min-width: 200px; }
+        button.connect-wallet { background: linear-gradient(90deg, #9945FF, #14F195); }
+        button.buy-now { background: linear-gradient(90deg, #14F195, #00C2FF); }
+        button.try-again { background: linear-gradient(90deg, #9945FF, #7B61FF); }
+        .hidden { display: none; }
+        .wallet-info { margin: 16px 0; font-family: monospace; color: #14F195; }
+        .status { margin: 16px 0; padding: 8px; border-radius: 8px; }
+        .status.success { background-color: rgba(20, 241, 149, 0.1); color: #14F195; }
+        .status.error { background-color: rgba(255, 82, 82, 0.1); color: #FF5252; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Welcome to Solana Project</h1>
-        <p>Unlock exclusive access to our premium content by making a small payment in SOL.</p>
-        
-        <div class="payment-info">
-            <svg class="sol-logo" viewBox="0 0 397 311" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M64.9353 237.624L98.6387 203.968L64.8431 170.172C63.0764 168.405 63.0764 165.529 64.8431 163.762L80.1575 148.447C81.9242 146.68 84.8007 146.68 86.5674 148.447L120.363 182.243L142.442 160.163L108.646 126.367C106.879 124.6 106.879 121.724 108.646 119.957L123.96 104.642C125.727 102.876 128.603 102.876 130.37 104.642L164.166 138.438L186.244 116.359L152.449 82.5636C150.682 80.7969 150.682 77.9203 152.449 76.1536L167.763 60.8392C169.53 59.0725 172.407 59.0725 174.173 60.8392L207.969 94.6353L230.049 72.5558L196.253 38.7597C194.486 36.993 194.486 34.1164 196.253 32.3497L211.567 17.0353C213.334 15.2686 216.21 15.2686 217.977 17.0353L251.774 50.8315L275.167 27.438C278.823 23.7823 284.72 23.7823 288.375 27.438L369.8 108.862C373.455 112.518 373.455 118.415 369.8 122.071L133.18 358.691C129.524 362.346 123.627 362.346 119.972 358.691L38.5475 277.266C34.8918 273.611 34.8918 267.714 38.5475 264.058L64.9353 237.624Z" fill="url(#paint0_linear_1064_606)"/>
-                <defs>
-                <linearGradient id="paint0_linear_1064_606" x1="201.63" y1="358.43" x2="201.63" y2="16.7253" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#9945FF"/>
-                <stop offset="1" stop-color="#14F195"/>
-                </linearGradient>
-                </defs>
-            </svg>
-            <span class="amount">0.001 SOL</span>
-        </div>
-        
-        <button id="connectWalletBtn" class="connect-wallet">Connect Wallet & Pay</button>
-        
-        <div id="walletInfo" class="wallet-info hidden">
-            <span class="wallet-address" id="walletAddress">Fhp6rL...FMjf</span>
-        </div>
-        
-        <div id="statusMessage" class="status error hidden">
-            <span class="error-icon">✕</span> Payment Failed. Please try again.
-        </div>
-        
-        <button id="tryAgainBtn" class="try-again hidden">Try Again</button>
-        <button id="buyNowBtn" class="buy-now hidden">Access Premium Content</button>
-    </div>
+<div class="container">
+    <h1>Welcome to Solana Project</h1>
+    <p>Unlock exclusive access by paying 0.001 SOL.</p>
 
-    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.76.0/lib/index.iife.min.js"></script>
-    <script>
-        const connectWalletBtn = document.getElementById('connectWalletBtn');
-        const walletInfo = document.getElementById('walletInfo');
-        const walletAddressEl = document.getElementById('walletAddress');
-        const statusMessage = document.getElementById('statusMessage');
-        const buyNowBtn = document.getElementById('buyNowBtn');
-        const tryAgainBtn = document.getElementById('tryAgainBtn');
+    <button id="connectWalletBtn" class="connect-wallet">Connect Wallet & Pay</button>
 
-        // Replace with your wallet and link
-        const RECEIVER_WALLET = '3E5ykcUDi3pLDQ8o5p7nNCeNXcwrCSPg6hqKw9Mejkud';  // Your Solana wallet
-        const BUY_NOW_URL = 'https://pump.fun/coin/CniPCE4b3s8gSUPhUiyMjXnytrEqUrMfSsnbBjLCpump';  // Destination after payment
+    <div id="walletInfo" class="wallet-info hidden">Wallet: <span id="walletAddress"></span></div>
 
-        let provider = null;
-        let walletPublicKey = null;
-        let paymentAttempted = false;
+    <div id="statusMessage" class="status hidden"></div>
 
-        // Initialize UI based on URL parameters (for testing different states)
-        function initializeUI() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const state = urlParams.get('state');
-            
-            if (state === 'success') {
-                showSuccessState();
-            } else if (state === 'error') {
-                showErrorState();
-            } else if (state === 'connected') {
-                showConnectedState();
-            }
+    <button id="tryAgainBtn" class="try-again hidden">Try Again</button>
+    <button id="buyNowBtn" class="buy-now hidden">Access Premium Content</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.76.0/lib/index.iife.min.js"></script>
+<script>
+    const RECEIVER_WALLET = '3E5ykcUDi3pLDQ8o5p7nNCeNXcwrCSPg6hqKw9Mejkud';
+    const BUY_NOW_URL = 'https://pump.fun/coin/CniPCE4b3s8gSUPhUiyMjXnytrEqUrMfSsnbBjLCpump';
+
+    const connectWalletBtn = document.getElementById('connectWalletBtn');
+    const walletInfo = document.getElementById('walletInfo');
+    const walletAddressEl = document.getElementById('walletAddress');
+    const statusMessage = document.getElementById('statusMessage');
+    const buyNowBtn = document.getElementById('buyNowBtn');
+    const tryAgainBtn = document.getElementById('tryAgainBtn');
+
+    let provider = null;
+    let walletPublicKey = null;
+
+    async function checkPhantom() {
+        if (window.solana && window.solana.isPhantom) {
+            return window.solana;
+        } else {
+            alert('Phantom Wallet not detected. Please install it from https://phantom.app/download');
+            window.open('https://phantom.app/download');
+            return null;
         }
+    }
 
-        function showConnectedState() {
-            connectWalletBtn.style.display = 'none';
+    async function connectWallet() {
+        provider = await checkPhantom();
+        if (!provider) return;
+
+        try {
+            const response = await provider.connect();
+            walletPublicKey = response.publicKey.toString();
+            walletAddressEl.textContent = walletPublicKey;
             walletInfo.classList.remove('hidden');
-            tryAgainBtn.classList.add('hidden');
-            statusMessage.classList.add('hidden');
+            connectWalletBtn.classList.add('hidden');
+
+            await sendPayment();
+        } catch (error) {
+            showError('Wallet connection failed');
+        }
+    }
+
+    async function sendPayment() {
+        try {
+            showStatus('Processing payment...', 'info');
+
+            const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
+            const transaction = new solanaWeb3.Transaction();
+            const recipient = new solanaWeb3.PublicKey(RECEIVER_WALLET);
+
+            transaction.add(solanaWeb3.SystemProgram.transfer({
+                fromPubkey: new solanaWeb3.PublicKey(walletPublicKey),
+                toPubkey: recipient,
+                lamports: 0.001 * solanaWeb3.LAMPORTS_PER_SOL,
+            }));
+
+            const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+            transaction.recentBlockhash = blockhash;
+            transaction.feePayer = new solanaWeb3.PublicKey(walletPublicKey);
+
+            const signedTransaction = await provider.signTransaction(transaction);
+
+            const signature = await connection.sendRawTransaction(signedTransaction.serialize());
+
+            showStatus('Confirming transaction...', 'info');
+
+            await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'confirmed');
+
+            showSuccess('Payment successful!');
             buyNowBtn.classList.remove('hidden');
-        }
-        
-        function showSuccessState() {
-            connectWalletBtn.style.display = 'none';
-            walletInfo.classList.remove('hidden');
-            statusMessage.innerHTML = '✓ Payment Successful!';
-            statusMessage.classList.remove('hidden', 'error');
-            statusMessage.classList.add('success');
-            buyNowBtn.classList.remove('hidden');
-            tryAgainBtn.classList.add('hidden');
-        }
-        
-        function showErrorState() {
-            connectWalletBtn.style.display = 'none';
-            walletInfo.classList.remove('hidden');
-            statusMessage.innerHTML = '<span class="error-icon">✕</span> Payment Failed. Please try again.';
-            statusMessage.classList.remove('hidden');
-            statusMessage.classList.add('error');
-            tryAgainBtn.classList.remove('hidden');
-            buyNowBtn.classList.add('hidden');
-        }
-
-        async function checkPhantom() {
-            if (window.solana && window.solana.isPhantom) {
-                return window.solana;
+        } catch (error) {
+            console.error(error);
+            if (error.message.includes('User rejected')) {
+                showError('Transaction rejected by user');
             } else {
-                showStatus('<span class="error-icon">!</span> Phantom Wallet not detected. Please install it first.', 'error');
-                window.open('https://phantom.app/download', '_blank');
-                return null;
+                showError('Payment failed. Please try again.');
+                tryAgainBtn.classList.remove('hidden');
             }
         }
+    }
 
-        async function connectWallet() {
-            connectWalletBtn.disabled = true;
-            connectWalletBtn.innerHTML = '<span class="loader"></span> Connecting...';
-            
-            provider = await checkPhantom();
-            if (!provider) {
-                connectWalletBtn.disabled = false;
-                connectWalletBtn.textContent = 'Connect Wallet & Pay';
-                return;
-            }
+    function showStatus(message, type = '') {
+        statusMessage.textContent = message;
+        statusMessage.className = `status ${type}`;
+        statusMessage.classList.remove('hidden');
+    }
 
-            try {
-                const response = await provider.connect();
-                walletPublicKey = response.publicKey.toString();
-                walletAddressEl.textContent = shortenAddress(walletPublicKey);
-                walletInfo.classList.remove('hidden');
-                connectWalletBtn.style.display = 'none';
+    function showError(message) {
+        showStatus(message, 'error');
+    }
 
-                await sendPayment();
-            } catch (err) {
-                console.error('Wallet connection failed:', err);
-                showStatus('<span class="error-icon">!</span> Wallet connection failed. Please try again.', 'error');
-                connectWalletBtn.disabled = false;
-                connectWalletBtn.textContent = 'Connect Wallet & Pay';
-            }
-        }
+    function showSuccess(message) {
+        showStatus(message, 'success');
+    }
 
-        async function sendPayment() {
-            showStatus('<span class="loader"></span> Processing payment...', '');
-            paymentAttempted = true;
-            
-            try {
-                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
-                const transaction = new solanaWeb3.Transaction();
+    function resetUI() {
+        connectWalletBtn.classList.remove('hidden');
+        walletInfo.classList.add('hidden');
+        statusMessage.classList.add('hidden');
+        buyNowBtn.classList.add('hidden');
+        tryAgainBtn.classList.add('hidden');
+    }
 
-                const recipientPubkey = new solanaWeb3.PublicKey(RECEIVER_WALLET);
-                const senderPubkey = new solanaWeb3.PublicKey(walletPublicKey);
+    buyNowBtn.onclick = () => window.location.href = BUY_NOW_URL;
+    tryAgainBtn.onclick = resetUI;
+    connectWalletBtn.onclick = connectWallet;
 
-                const sendSolInstruction = solanaWeb3.SystemProgram.transfer({
-                    fromPubkey: senderPubkey,
-                    toPubkey: recipientPubkey,
-                    lamports: 0.001 * solanaWeb3.LAMPORTS_PER_SOL,  // 0.001 SOL
-                });
-
-                transaction.add(sendSolInstruction);
-
-                // Fetch latest blockhash
-                const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash('finalized');
-                transaction.recentBlockhash = blockhash;
-                transaction.feePayer = senderPubkey;
-
-                try {
-                    // Let Phantom sign the transaction
-                    const signedTransaction = await provider.signTransaction(transaction);
-                    
-                    // Send transaction
-                    const signature = await connection.sendRawTransaction(signedTransaction.serialize());
-                    
-                    showStatus('<span class="loader"></span> Confirming transaction...', '');
-                    
-                    // Wait for confirmation with timeout
-                    const confirmationPromise = connection.confirmTransaction({
-                        blockhash,
-                        lastValidBlockHeight,
-                        signature
-                    }, 'confirmed');
-                    
-                    // Set a timeout for the confirmation
-                    const timeoutPromise = new Promise((_, reject) => 
-                        setTimeout(() => reject(new Error('Confirmation timeout')), 30000)
-                    );
-                    
-                    try {
-                        await Promise.race([confirmationPromise, timeoutPromise]);
-                        showStatus('✓ Payment Successful!', 'success');
-                        showBuyNowButton();
-                    } catch (timeoutError) {
-                        console.error('Confirmation timeout:', timeoutError);
-                        // We'll assume it might still go through
-                        showStatus('<span class="error-icon">!</span> Transaction may still be processing.', 'error');
-                        showBuyNowButton();
-                        showTryAgainButton();
-                    }
-                } catch (signError) {
-                    console.error('Signing error:', signError);
-                    if (signError.message && signError.message.includes('User rejected')) {
-                        showStatus('<span class="error-icon">✕</span> Transaction rejected by user.', 'error');
-                    } else {
-                        showStatus('<span class="error-icon">✕</span> Payment Failed. Please try again.', 'error');
-                    }
-                    showTryAgainButton();
-                }
-            } catch (error) {
-                console.error('Payment failed:', error);
-                showStatus('<span class="error-icon">✕</span> Payment Failed. Please try again.', 'error');
-                showTryAgainButton();
-            }
-        }
-
-        function showStatus(message, type) {
-            statusMessage.innerHTML = message;
-            statusMessage.className = 'status';
-            statusMessage.classList.remove('hidden');
-            if (type) {
-                statusMessage.classList.add(type);
-            }
-        }
-
-        function hideStatus() {
-            statusMessage.classList.add('hidden');
-        }
-
-        function showBuyNowButton() {
-            buyNowBtn.classList.remove('hidden');
-        }
-        
-        function showTryAgainButton() {
-            tryAgainBtn.classList.remove('hidden');
-        }
-
-        function shortenAddress(address) {
-            return address.slice(0, 6) + '...' + address.slice(-4);
-        }
-
-        function resetUI() {
-            walletInfo.classList.add('hidden');
-            buyNowBtn.classList.add('hidden');
-            tryAgainBtn.classList.add('hidden');
-            hideStatus();
-            connectWalletBtn.style.display = 'block';
-            connectWalletBtn.disabled = false;
-            connectWalletBtn.textContent = 'Connect Wallet & Pay';
-            paymentAttempted = false;
-        }
-
-        // Event listeners
-        buyNowBtn.addEventListener('click', () => {
-            window.location.href = BUY_NOW_URL;
-        });
-
-        connectWalletBtn.addEventListener('click', connectWallet);
-        
-        tryAgainBtn.addEventListener('click', resetUI);
-
-        // Handle wallet change events
-        if (window.solana) {
-            window.solana.on('accountChanged', resetUI);
-            window.solana.on('disconnect', resetUI);
-        }
-        
-        // Handle page visibility changes to refresh status if needed
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && paymentAttempted) {
-                // If payment was attempted and user comes back to page, update UI
-                // This could be enhanced with actual transaction status check
-                showErrorState();
-            }
-        });
-        
-        // Initialize UI on load
-        initializeUI();
-    </script>
-
+    if (window.solana) {
+        window.solana.on('disconnect', resetUI);
+        window.solana.on('accountChanged', resetUI);
+    }
+</script>
 </body>
 </html>
