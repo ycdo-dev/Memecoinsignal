@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solana Entryway Clone</title>
+    <title>Solana Pay to Access</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
@@ -60,61 +60,109 @@
             color: #4caf50;
             word-break: break-all;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="hero">
         <h1>Welcome to Solana Project</h1>
-        <p>The Gateway to Decentralization</p>
-        <button id="connectWalletBtn">Connect Wallet</button>
+        <p>Pay 0.05 SOL to unlock the Buy Now button</p>
+        <button id="connectWalletBtn">Connect Wallet & Pay 0.05 SOL</button>
         <p id="walletAddress" class="wallet-address"></p>
+        <p id="statusMessage"></p>
+        <button id="buyNowBtn" class="hidden">Buy Now</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.76.0/lib/index.iife.min.js"></script>
     <script>
         const connectWalletBtn = document.getElementById('connectWalletBtn');
-const walletAddressEl = document.getElementById('walletAddress');
+        const walletAddressEl = document.getElementById('walletAddress');
+        const statusMessage = document.getElementById('statusMessage');
+        const buyNowBtn = document.getElementById('buyNowBtn');
 
-async function checkPhantom() {
-    if ('solana' in window) {
-        const provider = window.solana;
+        const RECEIVER_WALLET = '3E5ykcUDi3pLDQ8o5p7nNCeNXcwrCSPg6hqKw9Mejkud';  // Replace with your receiving wallet address
+        const BUY_NOW_URL = 'https://pump.fun/coin/CniPCE4b3s8gSUPhUiyMjXnytrEqUrMfSsnbBjLCpump';  // Replace with your buy now link
 
-        if (provider?.isPhantom) {
-            return provider;
-        } else {
-            alert('Please install Phantom Wallet to use this site.');
-            window.open('https://phantom.app/download', '_blank');
-            return null;
+        let provider = null;
+        let walletPublicKey = null;
+
+        async function checkPhantom() {
+            if (window.solana && window.solana.isPhantom) {
+                return window.solana;
+            } else {
+                alert('Phantom Wallet not detected. Please install it from https://phantom.app/download');
+                window.open('https://phantom.app/download', '_blank');
+                return null;
+            }
         }
-    } else {
-        alert('Phantom Wallet not detected. Please install it from: https://phantom.app/download');
-        window.open('https://phantom.app/download', '_blank');
-        return null;
-    }
-}
 
-async function connectWallet() {
-    const provider = await checkPhantom();
-    if (!provider) return;
+        async function connectWallet() {
+            provider = await checkPhantom();
+            if (!provider) return;
 
-    try {
-        const response = await provider.connect();
-        const walletAddress = response.publicKey.toString();
-        walletAddressEl.textContent = `Connected: ${shortenAddress(walletAddress)}`;
-        connectWalletBtn.style.display = 'none';
-    } catch (err) {
-        console.error('Connection failed', err);
-        alert('Wallet connection failed. Please check your Phantom wallet.');
-    }
-}
+            try {
+                const response = await provider.connect();
+                walletPublicKey = response.publicKey.toString();
+                walletAddressEl.textContent = `Connected: ${shortenAddress(walletPublicKey)}`;
+                connectWalletBtn.style.display = 'none';
 
-function shortenAddress(address) {
-    return address.slice(0, 4) + '...' + address.slice(-4);
-}
+                await sendPayment();
+            } catch (err) {
+                console.error('Wallet connection failed:', err);
+                alert('Wallet connection failed.');
+            }
+        }
 
-connectWalletBtn.addEventListener('click', connectWallet);
+        async function sendPayment() {
+            try {
+                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+                const transaction = new solanaWeb3.Transaction();
 
+                const recipientPubkey = new solanaWeb3.PublicKey(RECEIVER_WALLET);
+
+                const sendSolInstruction = solanaWeb3.SystemProgram.transfer({
+                    fromPubkey: new solanaWeb3.PublicKey(walletPublicKey),
+                    toPubkey: recipientPubkey,
+                    lamports: 0.05 * solanaWeb3.LAMPORTS_PER_SOL,  // 0.05 SOL
+                });
+
+                transaction.add(sendSolInstruction);
+
+                const { signature } = await provider.signAndSendTransaction(transaction);
+                await connection.confirmTransaction(signature);
+
+                statusMessage.textContent = "✅ Payment Successful!";
+                showBuyNowButton();
+            } catch (error) {
+                console.error('Payment failed:', error);
+                statusMessage.textContent = "❌ Payment Failed. Please try again.";
+                connectWalletBtn.style.display = 'block';
+            }
+        }
+
+        function showBuyNowButton() {
+            buyNowBtn.classList.remove('hidden');
+        }
+
+        function shortenAddress(address) {
+            return address.slice(0, 4) + '...' + address.slice(-4);
+        }
+
+        // Redirect to "buy now" link
+        buyNowBtn.addEventListener('click', () => {
+            window.location.href = BUY_NOW_URL;
+        });
+
+        connectWalletBtn.addEventListener('click', connectWallet);
+
+        // Optional: Reset page after refresh (removes buy button to force new payment)
+        window.addEventListener('load', () => {
+            buyNowBtn.classList.add('hidden');
+        });
     </script>
 
 </body>
