@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Entryway Clone</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .hero {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #bbb;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: #512da8;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #673ab7;
+        }
+
+        .wallet-address {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #4caf50;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>Welcome to Solana Project</h1>
+        <p>The Gateway to Decentralization</p>
+        <button id="connectWalletBtn">Connect Wallet</button>
+        <p id="walletAddress" class="wallet-address"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.76.0/lib/index.iife.min.js"></script>
+    <script>
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+const walletAddressEl = document.getElementById('walletAddress');
+
+async function checkPhantom() {
+    if ('solana' in window) {
+        const provider = window.solana;
+
+        if (provider?.isPhantom) {
+            return provider;
+        } else {
+            alert('Please install Phantom Wallet to use this site.');
+            window.open('https://phantom.app/download', '_blank');
+            return null;
+        }
+    } else {
+        alert('Phantom Wallet not detected. Please install it from: https://phantom.app/download');
+        window.open('https://phantom.app/download', '_blank');
+        return null;
+    }
+}
+
+async function connectWallet() {
+    const provider = await checkPhantom();
+    if (!provider) return;
+
+    try {
+        const response = await provider.connect();
+        const walletAddress = response.publicKey.toString();
+        walletAddressEl.textContent = `Connected: ${shortenAddress(walletAddress)}`;
+        connectWalletBtn.style.display = 'none';
+    } catch (err) {
+        console.error('Connection failed', err);
+        alert('Wallet connection failed. Please check your Phantom wallet.');
+    }
+}
+
+function shortenAddress(address) {
+    return address.slice(0, 4) + '...' + address.slice(-4);
+}
+
+connectWalletBtn.addEventListener('click', connectWallet);
+
+    </script>
+
+</body>
+</html>
