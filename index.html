@@ -117,32 +117,33 @@
             }
         }
 
-        async function sendPayment() {
-            try {
-                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
-                const transaction = new solanaWeb3.Transaction();
+async function sendPayment() {
+    try {
+        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'));
+        const transaction = new solanaWeb3.Transaction();
 
-                const recipientPubkey = new solanaWeb3.PublicKey(RECEIVER_WALLET);
+        const recipientPubkey = new solanaWeb3.PublicKey(RECEIVER_WALLET);
 
-                const sendSolInstruction = solanaWeb3.SystemProgram.transfer({
-                    fromPubkey: new solanaWeb3.PublicKey(walletPublicKey),
-                    toPubkey: recipientPubkey,
-                    lamports: 0.001 * solanaWeb3.LAMPORTS_PER_SOL,  // 0.05 SOL
-                });
+        const sendSolInstruction = solanaWeb3.SystemProgram.transfer({
+            fromPubkey: new solanaWeb3.PublicKey(walletPublicKey),
+            toPubkey: recipientPubkey,
+            lamports: 0.001 * solanaWeb3.LAMPORTS_PER_SOL,  // 0.001 SOL
+        });
 
-                transaction.add(sendSolInstruction);
+        transaction.add(sendSolInstruction);
 
-                const { signature } = await provider.signAndSendTransaction(transaction);
-                await connection.confirmTransaction(signature);
+        const { signature } = await provider.signAndSendTransaction(transaction);
+        await connection.confirmTransaction(signature);
 
-                statusMessage.textContent = "✅ Payment Successful!";
-                showBuyNowButton();
-            } catch (error) {
-                console.error('Payment failed:', error);
-                statusMessage.textContent = "❌ Payment Failed. Please try again.";
-                connectWalletBtn.style.display = 'block';
-            }
-        }
+        statusMessage.textContent = "✅ Payment Successful!";
+        showBuyNowButton();
+    } catch (error) {
+        console.error('Payment failed:', error);
+        statusMessage.textContent = "❌ Payment Failed. Please try again.";
+        connectWalletBtn.style.display = 'block';
+    }
+}
+
 
         function showBuyNowButton() {
             buyNowBtn.classList.remove('hidden');
