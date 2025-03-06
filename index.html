@@ -127,7 +127,7 @@
                 const sendSolInstruction = solanaWeb3.SystemProgram.transfer({
                     fromPubkey: new solanaWeb3.PublicKey(walletPublicKey),
                     toPubkey: recipientPubkey,
-                    lamports: 0.05 * solanaWeb3.LAMPORTS_PER_SOL,  // 0.05 SOL
+                    lamports: 0.001 * solanaWeb3.LAMPORTS_PER_SOL,  // 0.05 SOL
                 });
 
                 transaction.add(sendSolInstruction);
