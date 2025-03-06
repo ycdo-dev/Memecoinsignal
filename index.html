@@ -66,21 +66,36 @@
     }
 
     async function connectWallet() {
-        provider = await checkPhantom();
-        if (!provider) return;
+    connectWalletBtn.disabled = true;
+    connectWalletBtn.innerText = 'Connecting...';
 
-        try {
-            const response = await provider.connect();
-            walletPublicKey = response.publicKey.toString();
-            walletAddressEl.textContent = walletPublicKey;
-            walletInfo.classList.remove('hidden');
-            connectWalletBtn.classList.add('hidden');
-
-            await sendPayment();
-        } catch (error) {
-            showError('Wallet connection failed');
-        }
+    provider = await checkPhantom();
+    if (!provider) {
+        resetButton();  // Re-enable the button if no Phantom
+        return;
     }
+
+    try {
+        const response = await provider.connect();
+        walletPublicKey = response.publicKey.toString();
+        walletAddressEl.textContent = walletPublicKey;
+
+        walletInfo.classList.remove('hidden');
+        connectWalletBtn.classList.add('hidden');
+
+        await sendPayment();
+    } catch (error) {
+        showError('Wallet connection failed');
+        resetButton();  // Re-enable the button if connection failed
+    }
+}
+
+function resetButton() {
+    connectWalletBtn.disabled = false;
+    connectWalletBtn.innerText = 'Connect Wallet & Pay';
+    connectWalletBtn.classList.remove('hidden');
+}
+
 
     async function sendPayment() {
         try {
